@@ -1,0 +1,16 @@
+
+
+	{	
+	  "id" : "1",
+          "name" : "Hähnchencurry"
+        }
+
+	{	
+	  "id" : "2",
+          "name" : "Suppe"
+        }
+
+	{	
+	  "id" : "3",
+          "name" : "Currywurst"
+        }

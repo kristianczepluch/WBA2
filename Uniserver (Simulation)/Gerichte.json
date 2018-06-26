@@ -1,0 +1,266 @@
+{
+
+  "Montag": [{
+      "id": 1,
+      "name": "Gebratene Hähnchenbrust mit Rahmsoße",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Hähnchen",
+          "menge": 150,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Rahmsoße",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Bratwurst",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curryketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Broccoli Nuggets mit Käsesoße",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Broccoli",
+          "menge": 150,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Panade",
+          "menge": 50,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Rahmsoße",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+  ],
+
+  "Dienstag": [{
+      "id": 4,
+      "name": "Chilli Con Carne mit Brötchen",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Chilli Con Carne",
+          "menge": 300,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Brötchen",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Bratwurst",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curryketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Linseneintopf mit Würstchen und Brötchen",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Linseneintopf",
+          "menge": 250,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Würstchen",
+          "menge": 50,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Brötchen",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+  ],
+  "Mittwoch": [{
+      "id": 6,
+      "name": "Milchreis mit Kirschen",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Milchreis",
+          "menge": 250,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Eingelegte Kirschen",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Bratwurst",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curryketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Schweineschnitzel mit Zwiebelsoße",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Schweineschnitzel",
+          "menge": 200,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Zwiebelsoße",
+          "menge": 150,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+  ],
+  "Donnerstag": [{
+      "id": 8,
+      "name": "Hähnchenbrustfilet mit Tomatensoße",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Hähnchenbrustfilet",
+          "menge": 200,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Tomatensoße",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Bratwurst",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curryketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Gemüseeintopf mit Brötchen",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Gemüseeintopf",
+          "menge": 300,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Brötchen",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+  ],
+  "Freitag": [{
+      "id": 10,
+      "name": "Süßkartoffelsuppe mit Brötchen",
+      "beilagen": 3,
+      "zutaten": [
+            {
+            "name": "Süßkartoffelsuppe",
+            "menge": 200,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Brötchen",
+            "menge": 50,
+            "einheit": "Gramm"
+            }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Bratwurst",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curryketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Paniertes Schollenfilet mit Kräutersoße",
+      "beilagen": 2,
+      "zutaten": [
+            {
+            "name": "Schollenfilet",
+            "menge": 200,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Panade",
+            "menge": 50,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Kräutersoße",
+            "menge": 150,
+            "einheit": "Gramm"
+            }
+      ]
+    }
+  ]
+}

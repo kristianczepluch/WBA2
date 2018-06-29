@@ -10,6 +10,7 @@ const ressourceName = "users";
 eintragId;
 gerichtName;
 gerichtKcal;
+counter;
 }
 
 const user = {
@@ -19,7 +20,7 @@ const user = {
   userHeight;
   userWeight;
   userKcal: 2000;
-  eintrag einträge [];
+  var einträge = new Array();
 }
 */
 
@@ -35,10 +36,10 @@ router.get("/:userId/:eintragId",function(req,res){
   res.send("Rreprä. eintrag mit id: " + req.params.eintragId)
 });
 
-/*router.post('/', bodyparser.json(), function (req, res){
-  console.log(req.body);
-})*/
-
+router.post('/:userId/:eintragId', bodyParser.json(), function (req, res) {
+    einträge[counter]=req.body;
+    counter++;
+});
 
 
 

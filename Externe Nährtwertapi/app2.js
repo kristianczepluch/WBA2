@@ -3,6 +3,8 @@ const fs = require('fs');
 
 // Viel einfachere API die nur 1 Request erfodert
 // Als Parameter einfach bei ingr= Nahrungsmittel einsetzen
+// getKcal beispielhaft für chicken aufgerufen, statt console.log kann auch returned werden
+
 
 getkcal("chicken");
 

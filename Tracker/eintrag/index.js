@@ -27,7 +27,7 @@ router.get('/:eintragId', function(req,res){
 router.post('/', bodyParser.json(), function (req, res) {
     speicherEinträge[counter]=req.body;
     counter++;
-    res.write("Eintrag wurde Hinzugefügt. Restliche Kcal für den Tag: " +kcal-req.body.kcal);
+    res.write("Eintrag wurde Hinzugefügt. Restliche Kcal für den Tag: " + kcal - req.body.kcal);
   });
 
   /*router.post('/',  function(req,res){

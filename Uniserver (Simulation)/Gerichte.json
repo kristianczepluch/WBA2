@@ -316,11 +316,6 @@
             "name": "Reis",
             "menge": 100,
             "einheit": "Gramm"
-            },
-             {
-            "name": "Vanillepudding",
-            "menge": 100,
-            "einheit": "Gramm"
             }
 
   ]
@@ -405,13 +400,7 @@
             "name": "Reis",
             "menge": 100,
             "einheit": "Gramm"
-            },
-             {
-            "name": "Schokopudding",
-            "menge": 100,
-            "einheit": "Gramm"
             }
-
   ]
 }
 ]

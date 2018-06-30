@@ -1,6 +1,8 @@
 {
-
-  "Montag": [{
+  "Kalenderwoche": [
+  {
+  "Montag": [
+     {"gerichte":[{
       "id": 1,
       "name": "Gebratene Hähnchenbrust mit Rahmsoße",
       "beilagen": 3,
@@ -16,6 +18,7 @@
         }
       ]
     },
+   
     {
       "id": 2,
       "name": "Grillbratwurst",
@@ -53,9 +56,39 @@
         }
       ]
     }
-  ],
+    ]
+    },
+    
+    
+    {
+    "beilagen": [
+      {
+            "name": "Gemischter Salat",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Pommes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Kroketten",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Vanillepudding",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+            ]
 
-  "Dienstag": [{
+    }
+],
+
+  "Dienstag": [
+    {"gerichte":[{
       "id": 4,
       "name": "Chilli Con Carne mit Brötchen",
       "beilagen": 3,
@@ -108,8 +141,36 @@
         }
       ]
     }
-  ],
-  "Mittwoch": [{
+  ]
+  },
+  {
+  "beilagen": [
+            {
+            "name": "Gemischter Salat",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Pommes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Reis",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Schokopudding",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+
+  ]
+}
+],
+  "Mittwoch": [
+    {"gerichte": [{
       "id": 6,
       "name": "Milchreis mit Kirschen",
       "beilagen": 3,
@@ -157,8 +218,35 @@
         }
       ]
     }
-  ],
-  "Donnerstag": [{
+  ]
+    },
+    {"beilagen": [
+            {
+            "name": "Gemischter Salat",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Pommes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Kroketten",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Fruchtjoghurt",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+
+  ]
+}
+],
+  "Donnerstag": [
+    {"gerichte":[{
       "id": 8,
       "name": "Hähnchenbrustfilet mit Tomatensoße",
       "beilagen": 3,
@@ -206,8 +294,40 @@
         }
       ]
     }
-  ],
-  "Freitag": [{
+  ]
+    },
+    {"beilagen": [
+            {
+            "name": "Gemischter Salat",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Pommes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Nudeln",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Reis",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Vanillepudding",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+
+  ]
+}
+],
+  "Freitag": [
+    {"gerichte": [{
       "id": 10,
       "name": "Süßkartoffelsuppe mit Brötchen",
       "beilagen": 3,
@@ -263,4 +383,38 @@
       ]
     }
   ]
+    },
+  {
+    "beilagen": [
+            {
+            "name": "Gemischter Salat",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Pommes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Kartoffeln",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Reis",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Schokopudding",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+
+  ]
+}
+]
+}
+]
 }

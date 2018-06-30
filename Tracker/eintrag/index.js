@@ -21,7 +21,7 @@ res.send(speicherEinträge);
 });
 
 router.get('/:eintragId', function(req,res){
-  res.send(speicherEinträge(req.params.userId));
+  res.send(speicherEinträge(req.params.eintraId));
 });
 
 router.post('/', bodyParser.json(), function (req, res) {
@@ -30,11 +30,11 @@ router.post('/', bodyParser.json(), function (req, res) {
     res.write("Eintrag wurde Hinzugefügt. Restliche Kcal für den Tag: " + kcal - req.body.kcal);
   });
 
-  /*router.post('/',  function(req,res){
+  /*router.post('/', bodyParser.json(), function(req,res){
     const eintrag = {
       gerichtId: eintrag.length + 1,
-      gerichtName: jsonContent.name;
-      gerichtKcal: jsonContent.kcal;
+      gerichtName: req.body.name;
+      gerichtKcal: req.body.kcal;
     }; */
 
 

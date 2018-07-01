@@ -18,10 +18,10 @@
         }
       ]
     },
-
+   
     {
       "id": 2,
-      "name": "Grillbratwurst",
+      "name": "Grillbratwurst mit Curryketchup",
       "beilagen": 3,
       "zutaten": [{
           "name": "Bratwurst",
@@ -58,8 +58,8 @@
     }
     ]
     },
-
-
+    
+    
     {
     "beilagen": [
       {

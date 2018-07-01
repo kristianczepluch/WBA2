@@ -1,0 +1,409 @@
+{
+  "Kalenderwoche": [
+  {
+  "Montag": [
+     {"gerichte":[{
+      "id": 1,
+      "name": "Gebratene Hähnchenbrust mit Rahmsoße",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Chicken",
+          "menge": 150,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Cream Sauce",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+   
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Sausage",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curry Ketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Broccoli Nuggets mit Käsesoße",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Broccoli",
+          "menge": 150,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Breadcrumbs",
+          "menge": 50,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Cheese Sauce",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+    ]
+    },
+    
+    
+    {
+    "beilagen": [
+      {
+            "name": "Mixed Salad",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Fries",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Croquettes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Custard",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+            ]
+
+    }
+],
+
+  "Dienstag": [
+    {"gerichte":[{
+      "id": 4,
+      "name": "Chilli Con Carne mit Brötchen",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Chilli Con Carne",
+          "menge": 300,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Bread Roll",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Sausage",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curry Ketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Linseneintopf mit Würstchen und Brötchen",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Lentil Stew",
+          "menge": 250,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Sausage",
+          "menge": 50,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Bread Roll",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+  ]
+  },
+  {
+  "beilagen": [
+            {
+            "name": "Mixed Salad",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Fries",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Rice",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Chocolate Pudding",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+
+  ]
+}
+],
+  "Mittwoch": [
+    {"gerichte": [{
+      "id": 6,
+      "name": "Milchreis mit Kirschen",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Rice Pudding",
+          "menge": 250,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Cherry",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Sausage",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curry Ketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Schweineschnitzel mit Zwiebelsoße",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Pork Cutlet",
+          "menge": 200,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Onion Sauce",
+          "menge": 150,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+  ]
+    },
+    {"beilagen": [
+            {
+            "name": "Mixed Salad",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Fries",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Croquettes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Fruit Yoghurt",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+
+  ]
+}
+],
+  "Donnerstag": [
+    {"gerichte":[{
+      "id": 8,
+      "name": "Hähnchenbrustfilet mit Tomatensoße",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Chickenbreast",
+          "menge": 200,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Tomato Sauce",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Sausage",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curry Ketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Gemüseeintopf mit Brötchen",
+      "beilagen": 2,
+      "zutaten": [{
+          "name": "Vegetable Stew",
+          "menge": 300,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Bread Roll",
+          "menge": 50,
+          "einheit": "Gramm"
+        }
+      ]
+    }
+  ]
+    },
+    {"beilagen": [
+            {
+            "name": "Mixed Salad",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Fries",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Noodles",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Rice",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+
+  ]
+}
+],
+  "Freitag": [
+    {"gerichte": [{
+      "id": 10,
+      "name": "Süßkartoffelsuppe mit Brötchen",
+      "beilagen": 3,
+      "zutaten": [
+            {
+            "name": "Sweet Potato Soup",
+            "menge": 200,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Bread Roll",
+            "menge": 50,
+            "einheit": "Gramm"
+            }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grillbratwurst mit Curryketchup",
+      "beilagen": 3,
+      "zutaten": [{
+          "name": "Sausage",
+          "menge": 65,
+          "einheit": "Gramm"
+        },
+        {
+          "name": "Curry Ketchup",
+          "menge": 100,
+          "einheit": "Gramm"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Paniertes Schollenfilet mit Kräutersoße",
+      "beilagen": 2,
+      "zutaten": [
+            {
+            "name": "Plaice Fillet",
+            "menge": 200,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Breadcrumbs",
+            "menge": 50,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Herb Sauce",
+            "menge": 150,
+            "einheit": "Gramm"
+            }
+      ]
+    }
+  ]
+    },
+  {
+    "beilagen": [
+            {
+            "name": "Mixed Salad",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+             {
+            "name": "Fries",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Potatoes",
+            "menge": 100,
+            "einheit": "Gramm"
+            },
+            {
+            "name": "Rice",
+            "menge": 100,
+            "einheit": "Gramm"
+            }
+  ]
+}
+]
+}
+]
+}

@@ -18,7 +18,7 @@
         }
       ]
     },
-   
+
     {
       "id": 2,
       "name": "Grillbratwurst",
@@ -58,8 +58,8 @@
     }
     ]
     },
-    
-    
+
+
     {
     "beilagen": [
       {
@@ -316,11 +316,6 @@
             "name": "Reis",
             "menge": 100,
             "einheit": "Gramm"
-            },
-             {
-            "name": "Vanillepudding",
-            "menge": 100,
-            "einheit": "Gramm"
             }
 
   ]
@@ -403,11 +398,6 @@
             },
             {
             "name": "Reis",
-            "menge": 100,
-            "einheit": "Gramm"
-            },
-             {
-            "name": "Schokopudding",
             "menge": 100,
             "einheit": "Gramm"
             }

@@ -237,7 +237,7 @@
             "einheit": "Gramm"
             },
              {
-            "name": "Fruit Yoghurt",
+            "name": "Yoghurt",
             "menge": 100,
             "einheit": "Gramm"
             }
@@ -251,7 +251,7 @@
       "name": "Hähnchenbrustfilet mit Tomatensoße",
       "beilagen": 3,
       "zutaten": [{
-          "name": "Chickenbreast",
+          "name": "Chicken breast",
           "menge": 200,
           "einheit": "Gramm"
         },

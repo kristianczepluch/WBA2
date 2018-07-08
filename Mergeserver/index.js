@@ -118,6 +118,47 @@ app.get("/Mensaessen/Gerichte/:gericht", (req, res) => {
           res.status(404).send("Gericht wurde nicht gefunden!")});
 });
 
+// Funktion f¸r eine Beilage
+app.get("/Mensaessen/Beilagen/:beilage", (req, res) => {
+
+  //Parameter abfragen
+  var gericht = req.params.beilage;
+  console.log("Gericht nach dem gesucht wird: " + gericht);
+
+  // URL f¸r API Abfragen erzeugen
+  const UniserverUrl = "http://localhost:3000";
+  var pfadBeilagen = "/api/beilagen/";
+  var abfrage1 = UniserverUrl + pfadBeilagen + gericht;
+  console.log("Verwendete URL: " + abfrage1);
+
+  // API Abfragen stellen a erh‰lt als R¸ckgabe einen Promise.
+  const a = getInformationApi(abfrage1);
+  a.then(function(result) {
+    const abzufragendeZutaten = result.name;
+    const menge = result.menge;
+
+    console.log("Inhalte, welche abgefragt werden: " + abzufragendeZutaten);
+
+    //console.log("Menge, welche abgefragt wird: " + menge);
+    // Nachdem die Zutaten vorliegen kˆnnen diese durch unsere Externe API abgefragt werden.
+    var a = getkcal(abzufragendeZutaten);
+    a.then(function(result) {
+      var resultobject = {};
+      resultobject.name = abzufragendeZutaten;
+      console.log("Result pro 100: " + result);
+      var result_per_1g = result/100;
+      result = result_per_1g * menge;
+      resultobject.kcal = result;
+
+      var dataForTrackerPost = JSON.stringify(resultobject);
+
+      console.log("JSON f¸r Tracker: " + dataForTrackerPost);
+    }).catch(function(reject) {
+      console.log('Reject', reject);
+    });
+  }).catch(reject => console.log('Reject', reject));
+});
+
 
 // Get the Port which is set by environment or 3000 by default
 const port = process.env.PORT || 3001;

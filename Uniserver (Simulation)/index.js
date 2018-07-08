@@ -1,3 +1,4 @@
+﻿
 /*
 Server Info:
 Dieser Server soll die API der Mensa simulieren, da wir auf diese keinen Zugriff bekommen.
@@ -15,13 +16,6 @@ app.use(express.json());
 // Das Jason-File mit unseren Informationen zu den Gerichten wird ausgelesen und vorgespeichert.
 var x = fs.readFileSync('Gerichte.json', 'utf8');
 var jsonContent = JSON.parse(x);
-
-
-
-
-
-var a = fs.readFileSync('AlleGerichte.json', 'utf8');
-var alleGerichte = JSON.parse(a);
 
 
 // Unsere Routen:
@@ -54,12 +48,10 @@ function uniq(a) {
   });
 }
 
-
+// Funktion,welche alle Kalnderwochen durchgeht und schaut ob das gesuchte object vorkommt. Wenn eins gefunden wird, wird es zurückgegeben ansonsten der Wert 0.
 function getGerichtInfo(gesGericht, obj) {
-  var notFound = {
-    result: "Gericht nicht vorhanden"
-  }
-  var size = Object.size(jsonContent);
+  var notFound = 0;
+  var size = jsonContent.Kalenderwoche.length;
 
   // Schleife, welche alle Kalnderwochen durchgeht und schaut ob das gesuchte object vorkommt. Wenn ja wird es zurückgegeben.
   for (var i = 0; i < size; ++i) {
@@ -85,9 +77,7 @@ function getGerichtInfo(gesGericht, obj) {
 }
 
 function getBeilagenInfo(gesBeilage, obj) {
-  var notFound = {
-    result: "Beilage nicht vorhanden"
-  }
+  var notFound = 0;
   var size = Object.size(jsonContent);
 
   // Schleife, welche alle Kalnderwochen durchgeht und schaut ob das gesuchte object vorkommt. Wenn ja wird es zurückgegeben.
@@ -112,7 +102,6 @@ function getBeilagenInfo(gesBeilage, obj) {
   }
   return notFound;
 }
-
 
 // Funktion, welche das gesamte JSON Dokument durchläuft und alle vorhandenen Gerichte herausschreibt.
 function getAlleGerichte(obj) {
@@ -175,81 +164,86 @@ function getAlleBeilagen(obj) {
 app.get(gerichte, (req, res) => {
   // Alle Gerichte zurückgeben.
   const alleGerichte = getAlleGerichte(jsonContent);
-  res.send(JSON.stringify(alleGerichte, null, 4));
+  res.status(200).send(JSON.stringify(alleGerichte, null, 4));
 });
 
 app.get(gerichte_id, (req, res) => {
   // Konkrete Gerichte ausgeben.
   const reqGericht = req.params.gericht;
   var gerichtInfo = getGerichtInfo(reqGericht, jsonContent);
-  gerichtInfo = JSON.stringify(gerichtInfo, null, 4);
-  res.send(gerichtInfo);
+  if (gerichtInfo != 0) {
+    console.log("Gesendet: " + gerichtInfo);
+    res.status(200).json(gerichtInfo);
+  } else res.status(404).send("Gericht nicht gefunden!");
 });
 
 app.get(beilagen, (req, res) => {
   // Alle Beilagen zurückgeben.
   const alleBeilagen = getAlleBeilagen(jsonContent);
-  res.send(JSON.stringify(alleBeilagen, null, 4));
+  res.status(200).send(JSON.stringify(alleBeilagen, null, 4));
 });
 
 app.get(beilagen_id, (req, res) => {
   // Konkrete Beilagen zurückgeben.
   const reqBeilage = req.params.beilage;
   var beilageInfo = getBeilagenInfo(reqBeilage, jsonContent);
-  beilageInfo = JSON.stringify(beilageInfo, null, 4);
-  res.send(beilageInfo);
+  if (beilageInfo != 0) {
+    beilageInfo = JSON.stringify(beilageInfo, null, 4);
+    res.status(200).send(beilageInfo);
+  } else res.status(404).send("Beilage nicht gefunden!");
 });
 
 app.get(kalnderwochen, (req, res) => {
   const kalenderwochen = getKalenderwochen(jsonContent);
-  res.send(kalenderwochen);
+  res.status(200).send(kalenderwochen);
 });
 
 app.get(kalenderwochen_id_wochentage_id_gerichte, (req, res) => {
   // Alle Gerichte einer konkreten Kalenderwoche und eines Wochentags zurückgeben.
+
   var reqKalenderwoche = req.params.kalenderwoche;
   var reqWochentag = req.params.wochentag;
-  reqKalenderwoche = reqKalenderwoche-1;
+  reqKalenderwoche = reqKalenderwoche - 1;
 
   if (reqWochentag === "Montag") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Montag[0].gerichte), null, 4);
-    res.send(jsonObj);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Dienstag") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[0].gerichte), null, 4);
-    res.send(jsonObj);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Mittwoch") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[0].gerichte), null, 4);
-    res.send(jsonObj);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Donnerstag") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[0].gerichte), null, 4);
-    res.send(jsonObj);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Freitag") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[0].gerichte), null, 4);
-    res.send(jsonObj);
-  }
+    res.status(200).send(jsonObj);
+  } else res.status(404).send("Angefragter Tag ist nicht vorhanden!");
 });
 
 app.get(kalenderwochen_id_wochentage_id_beilagen, (req, res) => {
   // Alle Beilagen einer konkreten Kalenderwoche und eines Wochentags zurückgeben.
   var reqKalenderwoche = req.params.kalenderwoche;
   const reqWochentag = req.params.wochentag;
-  reqKalenderwoche = reqKalenderwoche-1;
+  reqKalenderwoche = reqKalenderwoche - 1;
   if (reqWochentag === "Montag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoch].Montag[1].beilagen), null, 4);
-    res.send(jsonObj);
+    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Montag[1].beilagen), null, 4);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Dienstag") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[1].beilagen), null, 4);
-    res.send(jsonObj);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Mittwoch") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[1].beilagen), null, 4);
-    res.send(jsonObj);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Donnerstag") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[1].beilagen), null, 4);
-    res.send(jsonObj);
+    res.status(200).send(jsonObj);
   } else if (reqWochentag === "Freitag") {
     var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[1].beilagen), null, 4);
     res.send(jsonObj);
-}
+  } else res.status(404).send("Angefragter Tag ist nicht vorhanden!");
 });
 
 
@@ -262,12 +256,12 @@ app.listen(port, () => console.log("Listening on port " + port + "..."));
 
 // Funktion welche einem ein Object mit den Kalnderwochen zurückruft
 function getKalenderwochen(obj) {
-  var size = Object.size(obj);
+  var size2 = obj.Kalenderwoche.length;
   var kalenderwochenObj = {
     Kalenderwochen: []
   };
 
-  for (var i = 1; i < size + 1; ++i) {
+  for (var i = 1; i < size2 + 1; ++i) {
     kalenderwochenObj.Kalenderwochen.push(i);
   }
   kalenderwochenObj = JSON.stringify(kalenderwochenObj, null, 4);

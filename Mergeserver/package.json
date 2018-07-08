@@ -1,7 +1,7 @@
 {
   "name": "mergeserver",
   "version": "1.0.0",
-  "description": "",
+  "description": "Microservice, welcher Gerichte aus der Mensa verwaltet und in den Tracker eintragen kann.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,8 @@
   "author": "Denise Kübler, Kristian Czepluch",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2"
   }
 }

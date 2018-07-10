@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require('body-parser');
-
+const http=require('http');
 const https = require('https');
 const fs = require('fs');
 
@@ -12,26 +12,29 @@ var listeUser = [];
 var userAnzahl = 0;
 
 
-function getkcal(nahrungsmittel){
-  const URL = "https://api.edamam.com/api";
-  const path = "/food-database/parser?ingr="+ nahrungsmittel + "&app_id=0931d8e1&app_key=d5bc406aaecb8b39cb511c6dd792bc39&";
-  var ApiURL = URL + path;
+function getkcal(nahrungsmittel) {
+  return new Promise(function(resolve, reject) {
+    const URL = "http://api.edamam.com/api";
+    const path = "/food-database/parser?ingr=" + nahrungsmittel + "&app_id=0931d8e1&app_key=d5bc406aaecb8b39cb511c6dd792bc39&";
+    var ReqURL = URL + path;
 
-  https.get(ApiURL, (resp) => {
-    let data = '';
-    // A chunk of data has been recieved.
-    resp.on('data', (chunk) => {
-      data += chunk;
-    });
-    // The whole response has been received. Print out the result.
-    resp.on('end', () => {
-      var newData = JSON.parse(data);
-      //console.log(newData.hints[0].food.nutrients.ENERC_KCAL); // ANPASSEN! EInrag.kcal = newData.hints[0].food.nutrients.ENERC_KCAL;
-      return newData.hints[0].food.nutrients.ENERC_KCAL;
-    });
+    http.get(ReqURL, (resp) => {
+      let data = '';
 
-  }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      // A chunk of data has been recieved.
+      resp.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        var newData = JSON.parse(data);
+        var kcal = newData.hints[0].food.nutrients.ENERC_KCAL;
+        if (kcal) {
+          resolve(kcal);
+        } else reject("kcal ist leer!");
+      });
+    });
   });
 }
 
@@ -54,76 +57,123 @@ router.post('/', bodyParser.json(), function (req, res){
         userage: req.body.userage,
         userheight: req.body.userheight,
         userweight: req.body.userweight,
-        userkcal: 2000,
+        userkcal: 0,
         eintraege: [],
         eintragId: 0
   };
 
+  if (req.body.usergender == "Female") {
+      user.userkcal = 655.1 + (9.6*user.userweight)+(1.8*user.userheight)-(4.7*user.userage);
+    } else {
+      user.userkcal = 66.47 + (13.7*user.userweight)+(5.0*user.userheight)-(6.8*user.userage);
+    }
+
   listeUser[userAnzahl]=user;
   userAnzahl++;
-
-  if (req.body.usergender == "Female") {
-      userkcal = 655,1 + (9,6*req.body.userweight)+(1,8*req.body.userheight)-(4,7*req.body.userage);
-    } else {
-      userkcal = 66,47 + (13,7*req.body.userweight)+(5*req.body.userheight)-(6,8*req.body.userage);
-    }
 
   res.status(200).send("User " +req.body.username+ " hinzugefügt.");
 });
 
 router.put('/:userId', bodyParser.json(), function (req, res){
 
-if (listeUser[req.params.userId] == null){res.status(404).type('text').send('Dieser User ist nicht vorhanden');}
-listeUser[req.params.userId].username= req.body.username;
-listeUser[req.params.userId].userage= req.body.userage;
-listeUser[req.params.userId].userheight= req.body.userheight;
-listeUser[req.params.userId].userweight= req.body.userweight;
-res.status(200).type('text').send('Die Daten des Useres wurden angepasst');
+
+for (let i = 0; i<listeUser.length; i++){
+  if (listeUser[i].id == req.params.userId) {
+    listeUser[i].username= req.body.username;
+    listeUser[i].usergender=req.body.usergender;
+    listeUser[i].userage= req.body.userage;
+    listeUser[i].userheight= req.body.userheight;
+    listeUser[i].userweight= req.body.userweight;
+        if (req.body.usergender == "Female") {
+            listeUser[i].userkcal = 655.1 + (9.6*listeUser[i].userweight)+(1.8*listeUser[i].userheight)-(4.7*listeUser[i].userage);
+            } else {
+                listeUser[i].userkcal = 66.47 + (13.7*listeUser[i].userweight)+(5.0*listeUser[i].userheight)-(6.8*listeUser[i].userage);
+          }
+    res.status(200).type('text').send('Die Daten des Users wurden angepasst');
+    return;
+  }
+}
+res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 
 
 });
-
 
 router.delete('/:userId', bodyParser.json(), function(req, res){
-  listeUser = listeUser.filter(function(del) {
-  return del.id != req.params.userId;
-  });
-res.status(204).send('Der User mit der ID wurde geloescht ' + req.params.userId );
-userAnzahl--;
+
+  for (let i = 0; i<listeUser.length; i++){
+    if (listeUser[i].id == req.params.userId) {
+      listeUser = listeUser.filter(function(del) {
+        return del.id != req.params.userId;
+      });
+      res.status(200).send("User wurde erfolgreich gelöscht!");
+      return;
+    }
+  }
+res.status(404).type('text').send('Dieser User ist nicht vorhanden');
+
 });
-
-
-
 
 router.get('/:userId',bodyParser.json(), function(req,res){
 
-if (listeUser[req.params.userId] == null){res.status(404).type('text').send('Dieser User ist nicht vorhanden');}
-res.status(200).send(listeUser[req.params.userId]);
-
-
+for (let i = 0; i<listeUser.length; i++){
+  if (listeUser[i].id == req.params.userId) {
+    res.status(200).send(listeUser[i]);
+    return;
+  }
+}   // warum nicht möglich, nach LÖSCHEN!??
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 });
 
 
 
-router.post('/:userId/eintraege/eintrag', bodyParser.json(), function (req, res) {
+router.post('/:userId/eintraege', bodyParser.json(), function (req, res) {
 
-if (listeUser[req.params.userId] == null){res.status(404).type('text').send('Dieser User ist nicht vorhanden');}
-listeUser[req.params.userId].eintraege[listeUser[req.params.userId].eintragId]=req.body;
-listeUser[req.params.userId].eintragId++;
-if (req.body.kcal == null) {
-    var kcalGericht = getkcal(req.body.name);
-    listeUser[req.params.userId].eintraege[listeUser[req.params.userId].eintragId].kcal = kcalGericht;
+
+for (let i = 0; i<listeUser.length; i++){
+  if (listeUser[i].id == req.params.userId) {
+
+    var eintrag = {
+      id: listeUser[i].eintragId,
+      name: req.body.name,
+      menge: req.body.menge,
+      kcal: req.body.kcal
+    }
+
+    listeUser[i].userkcal = listeUser[i].userkcal - eintrag.kcal;
+
+   if (req.body.kcal == 0) {
+       var mengeMultiplier = (req.body.menge/100);
+       var kcalGericht = getkcal(req.body.name)
+            kcalGericht.then(function(result){
+              var resultobject = {};
+              resultobject.name = req.body.name;
+              eintrag.kcal = result*mengeMultiplier;
+              listeUser[i].userkcal = listeUser[i].userkcal - result;
+            });
+     }
+listeUser[i].eintraege[listeUser[i].eintragId]= eintrag ;
+listeUser[i].eintragId++;
+
+
+res.status(200).send("Eintrag hinzugefügt.");
+return;
 }
-listeUser[req.params.userId].userkcal = listeUser[req.params.userId].userkcal - listeUser[req.params.userId].eintraege[listeUser[req.params.userId].eintragId].kcal;
-res.status(200).send("Eintrag hinzugefügt. Restliche Kcal: "+ listeUser[req.params.userId].userkcal);
+}
+res.status(404).type('text').send('Dieser User ist nicht vorhanden')
 
   });
 
 
   router.get('/:userId/eintraege', bodyParser.json(), function(req,res){
 
-  if (listeUser[req.params.userId] == null){res.status(404).type('text').send('Dieser User ist nicht vorhanden');}
-      res.status(200).send(listeUser[req.params.userId].eintraege);
+
+  for (let i = 0; i<listeUser.length; i++){
+    if (listeUser[i].id == req.params.userId) {
+      res.status(200).send(listeUser[i].eintraege);
+      return;
+    }
+  }
+    res.status(404).type('text').send('Dieser User ist nicht vorhanden');
   });
 
 
@@ -131,22 +181,65 @@ res.status(200).send("Eintrag hinzugefügt. Restliche Kcal: "+ listeUser[req.par
 
 router.get('/:userId/eintraege/:eintragId', bodyParser.json(), function(req,res){
 
-if (listeUser[req.params.userId] == null){res.status(404).type('text').send('Dieser User ist nicht vorhanden');}
-  if (listeUser[req.params.userId].eintragId >= req.params.eintragId){
-    res.status(200).send(listeUser[req.params.userId].eintraege[req.params.eintragId]);
+
+for (let i = 0; i<listeUser.length; i++){
+  if (listeUser[i].id == req.params.userId) {
+      for (let j = 0; j<listeUser[i].eintraege.length;j++){
+          if (listeUser[i].eintraege[j].id == req.params.eintragId){
+            res.status(200).send(listeUser[i].eintraege[j])
+            return;
+          }
+      }
+      res.status(404).send("Eintrag nicht vorhanden");
+    return;
   }
-    res.status(404).send("Eintrag nicht vorhanden");
+}
+res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 
 });
 
-// EXTERNE API TEST
 
-router.get('/testapi', bodyParser.json(), function (req, res){
+router.delete('/:userId/eintraege/:eintragId', bodyParser.json(), function(req, res){
 
-var kcal = getkcal("apple");
-consolge.log( "TEST: " +kcal);
 
-})
+  for (let i = 0; i<listeUser.length; i++){
+    if (listeUser[i].id == req.params.userId) {
+        for (let j = 0; j<listeUser[i].eintraege.length;j++){
+            if (listeUser[i].eintraege[j].id == req.params.eintragId){
+              listeUser[i].userkcal=listeUser[i].userkcal+listeUser[i].eintraege[j].kcal;
+                  listeUser[i].eintraege = listeUser[i].eintraege.filter(function(del) {
+                    return del.id != listeUser[i].eintraege[j].id;
+                  });
+                  res.status(200).send("Eintrag wurde erfolgreich gelöscht!");
+                  return;
+            }
+        }
+        res.status(404).send("Eintrag nicht vorhanden");
+      return
+    }
+ }
+ res.status(404).type('text').send('Dieser User ist nicht vorhanden');
+
+});
+
+
+
+router.get('/:userId/userkcal',bodyParser.json(), function(req,res){
+
+  for (let i = 0; i<listeUser.length; i++){
+    if (listeUser[i].id == req.params.userId) {
+      if (listeUser[i].userkcal <= 0){
+        res.status(200).send("Tagesmaximum überschritten!");
+        return;
+      } else {
+      res.status(200).send("Verfügbare Kcal für den Tag: "+listeUser[i].userkcal);
+      return;
+    }
+  }
+}
+    res.status(404).type('text').send('Dieser User ist nicht vorhanden');
+  });
+
 
 
 
@@ -154,11 +247,18 @@ consolge.log( "TEST: " +kcal);
 
 
 
-        // Testen! (Debuggen) [ Zugriff auf Kcal und userkcal fragen!!!]
+                          //   - POST MensaEintarg - erstellen mit Promises! // Wenn Promise resolvet -> POST EINTRAG 
 
-        // Callback bei Requests beachten!
+                          //   - Notizen / Doku [CHECK/ NOCH ERGÄNZEN BEI ÄNDERUNGEN!]
 
-        // Externe Api abfrage testen! 
+                          //   - Beautyfier
+
+                          //   - FOR Schleifen Fehlerhaft, nach Löschen von Objekten!
+
+
+
+
+
 
         // (CHECK) -> Deploy
 

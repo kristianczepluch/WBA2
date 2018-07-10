@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express ();
+const http=require('http');
 const https = require('https');
 const fs = require('fs');
 const request = require('request');
@@ -12,6 +13,8 @@ const settings = {
 
 
 app.use(bodyParser.json());
+
+
 
 // Errorhandler
 app.use(function(err,req,res,next){
@@ -37,7 +40,7 @@ app.get('/gerichte', bodyParser.json(), function (req, res){ // Anfrage alle Ger
 var url = 'xyxyxy/gerichte';
 
 request(url, function (err,response,body){
-  body = JSON.parse(body);
+  body = JSON.parse(body);   //Falls Fehler evtl. -> res.end(body);
   res.json(body);
   });
 });
@@ -54,23 +57,25 @@ app.get('/beilagen', bodyParser.json(), function (req,res){ // Beilagen
 
 
 
-app.get('/gerichte/:gerichtId/:userId', bodyParser.json(), function (req,res){ //Festlegen des Eintrags
-var gerichtId = req.params.gerichtId;
-var url = 'xyxyxy/gerichte/'+ gerichtId;
+app.get('MensaGm/gerichte/:gericht', bodyParser.json(), function (req,res){ //Festlegen des Eintrags
+var gericht = req.params.gericht;
+var url = 'xyxyxy/gerichte/'+ gericht;
 
 request(url, function (err,response,body){
  res.send('Ausgewähltes Gericht übermittelt');
   });
 });
 
-app.get('/beilagen/:beilageId/:userId', bodyParser.json(), function (req,res){ //Festlegen des Eintrags
-var beilageId = req.params.beilageId;
-var url = 'xyxyxy/gerichte/'+ beilageId;
+app.get('MensaGm/beilagen/:beilage', bodyParser.json(), function (req,res){ //Festlegen des Eintrags
+var beilage = req.params.beilage;
+var url = 'xyxyxy/gerichte/'+ beilage;
 
 request(url, function (err,response,body){
  res.send('Ausgewählte Beilage übermittelt');
-  });
+}); // wenn Promise da, Post mit result...
 });
+
+
 
 
 

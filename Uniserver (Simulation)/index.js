@@ -4,7 +4,7 @@ Server Info:
 Dieser Server soll die API der Mensa simulieren, da wir auf diese keinen Zugriff bekommen.
 Da dies nicht der Hauptteil unseres Projektes sein soll haben wir uns dazu entschlossen nur die für uns relevanten
 GET Abfragen zu implementieren. Der Hauptfokus unseres Projektes soll auf dem Kalorien-Tracker-Server liegen und
-auf dem Microservice, welcher die Kilokalorien der Unigerichte berechnet!
+auf dem Microservice, welcher die Kilokalorien der Unigerichte berechnet! Dieser Server dient als Informationslieferant!
 */
 
 // Unsere Module:
@@ -26,13 +26,26 @@ const beilagen_id = '/api/beilagen/:beilage';
 const gerichte_id = '/api/gerichte/:gericht';
 const kalenderwochen_id_wochentage = '/api/kalenderwochen/:kalenderwoche/wochentage';
 const kalenderwochen_id_wochentage_id_gerichte = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag/gerichte';
-const kalenderwochen_id_wochentage_id_gerichte_id = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag/gerichte/:gericht';
 const kalenderwochen_id_wochentage_id_beilagen = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag/beilagen';
-const kalenderwochen_id_wochentage_id_beilagen_id = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag/beilagen/:beilage';
+const kalenderwochen_id_wochentage_id = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag';
 
-// Funktion, welche die "Länge" des Objects zurückliefert, welche semantisch der Anzahl der vorhandenen Kalenderwoche ist.
+// Funktion welche einem ein Object mit den Kalnderwochen zurückruft
+function getKalenderwochen(obj) {
+  let size = obj.Kalenderwoche.length;
+  let kalenderwochenObj = {
+    Kalenderwochen: []
+  };
+
+  for (let i = 1; i < size + 1; ++i) {
+    kalenderwochenObj.Kalenderwochen.push(i);
+  }
+  kalenderwochenObj = JSON.stringify(kalenderwochenObj, null, 4);
+  return kalenderwochenObj;
+}
+
+// Funktion, welche die "Länge" des Objects zurückliefert.
 Object.size = function(obj) {
-  var size = 0,
+  let size = 0,
     key;
   for (key in obj) {
     if (obj.hasOwnProperty(key)) size++;
@@ -42,20 +55,20 @@ Object.size = function(obj) {
 
 // Funktion, welche doppelte Elemente aus einem Array entfernt.
 function uniq(a) {
-  var seen = {};
+  let seen = {};
   return a.filter(function(item) {
     return seen.hasOwnProperty(item) ? false : (seen[item] = true);
   });
 }
 
-// Funktion,welche alle Kalnderwochen durchgeht und schaut ob das gesuchte object vorkommt. Wenn eins gefunden wird, wird es zurückgegeben ansonsten der Wert 0.
+// Funktion,welche alle Kalenderwochen durchgeht und schaut ob das gesuchte Objekt vorkommt. Wenn eins gefunden wird, wird es zurückgegeben ansonsten der Wert 0.
 function getGerichtInfo(gesGericht, obj) {
-  var notFound = 0;
-  var size = jsonContent.Kalenderwoche.length;
+  let notFound = 0;
+  let size = jsonContent.Kalenderwoche.length;
 
-  // Schleife, welche alle Kalnderwochen durchgeht und schaut ob das gesuchte object vorkommt. Wenn ja wird es zurückgegeben.
-  for (var i = 0; i < size; ++i) {
-    for (var j = 0; j < 3; ++j) {
+  // Schleife, welche alle Kalenderwochen durchgeht und schaut ob das gesuchte object vorkommt. Wenn ja wird es zurückgegeben.
+  for (let i = 0; i < size; ++i) {
+    for (let j = 0; j < 3; ++j) {
       if ((jsonContent.Kalenderwoche[i].Montag[0].gerichte[j].name) === (gesGericht)) {
         return jsonContent.Kalenderwoche[i].Montag[0].gerichte[j]
       }
@@ -76,13 +89,14 @@ function getGerichtInfo(gesGericht, obj) {
   return notFound;
 }
 
+// Funktion,welche alle Kalenderwochen durchgeht und schaut ob das gesuchte Objekt vorkommt. Wenn eins gefunden wird, wird es zurückgegeben ansonsten der Wert 0.
 function getBeilagenInfo(gesBeilage, obj) {
-  var notFound = 0;
-  var size = Object.size(jsonContent);
+  let notFound = 0;
+  let size = obj.Kalenderwoche.length;
 
   // Schleife, welche alle Kalnderwochen durchgeht und schaut ob das gesuchte object vorkommt. Wenn ja wird es zurückgegeben.
-  for (var i = 0; i < size; ++i) {
-    for (var j = 0; j < 4; ++j) {
+  for (let i = 0; i < size; ++i) {
+    for (let j = 0; j < 4; ++j) {
       if ((jsonContent.Kalenderwoche[i].Montag[1].beilagen[j].name) === (gesBeilage)) {
         return jsonContent.Kalenderwoche[i].Montag[1].beilagen[j]
       }
@@ -103,14 +117,92 @@ function getBeilagenInfo(gesBeilage, obj) {
   return notFound;
 }
 
+// Funktion, welche einem einen Speiseplan für eine konkorete Kalenderwoche und einen Wochentag zurückliefert.
+function getSpeiseplan(reqKalenderwoche, reqWochentag) {
+  let notFound = 0;
+  if (reqWochentag == "Montag") {
+    let resultObject = {}
+    resultObject.Gerichte = (jsonContent.Kalenderwoche[reqKalenderwoche].Montag[0].gerichte);
+    resultObject.Beilagen = (jsonContent.Kalenderwoche[reqKalenderwoche].Montag[1].beilagen);
+    return resultObject;
+
+  } else if (reqWochentag == "Dienstag") {
+    let resultObject = {}
+    resultObject.Gerichte = (jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[0].gerichte);
+    resultObject.Beilagen = (jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[1].beilagen);
+    return resultObject;
+
+  } else if (reqWochentag == "Mittwoch") {
+    let resultObject = {}
+    resultObject.Gerichte = (jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[0].gerichte);
+    resultObject.Beilagen = (jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[1].beilagen);
+    return resultObject;
+
+  } else if (reqWochentag == "Donnerstag") {
+    let resultObject = {}
+    resultObject.Gerichte = (jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[0].gerichte);
+    resultObject.Beilagen = (jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[1].beilagen);
+    return resultObject;
+
+  } else if (reqWochentag == "Freitag") {
+    let resultObject = {}
+    resultObject.Gerichte = (jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[0].gerichte);
+    resultObject.Beilagen = (jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[1].beilagen);
+    return resultObject;
+  } else return notFound;
+}
+
+// Funktion, welche einem die Gerichte für eine konkorete Kalenderwoche und einen Wochentag zurückliefert.
+function getSpeiseplanGerichte(reqKalenderwoche, reqWochentag) {
+  let notFound = 0;
+  if (reqWochentag == "Montag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Montag[0].gerichte);
+
+  } else if (reqWochentag == "Dienstag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[0].gerichte);
+
+  } else if (reqWochentag == "Mittwoch") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[0].gerichte);
+
+  } else if (reqWochentag == "Donnerstag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[0].gerichte);
+
+  } else if (reqWochentag == "Freitag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[0].gerichte);
+
+  } else return notFound;
+}
+
+// Funktion, welche einem die Beilagen für eine konkorete Kalenderwoche und einen Wochentag zurückliefert.
+function getSpeiseplanBeilagen(reqKalenderwoche, reqWochentag) {
+  let notFound = 0;
+  if (reqWochentag == "Montag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Montag[1].beilagen);
+
+  } else if (reqWochentag == "Dienstag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[1].beilagen);
+
+  } else if (reqWochentag == "Mittwoch") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[1].beilagen);
+
+  } else if (reqWochentag == "Donnerstag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[1].beilagen);
+
+  } else if (reqWochentag == "Freitag") {
+    return (jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[1].beilagen);
+
+  } else return notFound;
+}
+
+
 // Funktion, welche das gesamte JSON Dokument durchläuft und alle vorhandenen Gerichte herausschreibt.
 function getAlleGerichte(obj) {
-  var alleGerichteListe = [];
-  var size = Object.size(jsonContent);
+  let alleGerichteListe = [];
+  let size = Object.size(jsonContent);
 
   // Schleife, welche alle Kalnderwochen durchgeht und die Gerichte jedes Wochentages in ein Array schreibt.
-  for (var i = 0; i < size; ++i) {
-    for (var j = 0; j < 3; ++j) {
+  for (let i = 0; i < size; ++i) {
+    for (let j = 0; j < 3; ++j) {
       alleGerichteListe.push((jsonContent.Kalenderwoche[i].Montag[0].gerichte[j].name));
       alleGerichteListe.push((jsonContent.Kalenderwoche[i].Dienstag[0].gerichte[j].name));
       alleGerichteListe.push((jsonContent.Kalenderwoche[i].Mittwoch[0].gerichte[j].name));
@@ -121,10 +213,10 @@ function getAlleGerichte(obj) {
   // Doppelte Elemente werden rausgestrichen.
   alleGerichteListe = uniq(alleGerichteListe);
 
-  var alleGerichteObject = {
+  let alleGerichteObject = {
     Gerichte: []
   };
-  for (var i = 0; i < alleGerichteListe.length; ++i) {
+  for (let i = 0; i < alleGerichteListe.length; ++i) {
     alleGerichteObject.Gerichte.push(alleGerichteListe[i]);
   }
   return alleGerichteObject;
@@ -134,12 +226,12 @@ function getAlleGerichte(obj) {
 
 // Funktion, welche das gesamte JSON Dokument durchläuft und alle vorhandenen B herausschreibt.
 function getAlleBeilagen(obj) {
-  var alleBeilagenListe = [];
-  var size = Object.size(jsonContent);
+  let alleBeilagenListe = [];
+  let size = Object.size(jsonContent);
 
   // Schleife, welche alle Kalnderwochen durchgeht und die Beilagen jedes Wochentages in ein Array schreibt.
-  for (var i = 0; i < size; ++i) {
-    for (var j = 0; j < 4; ++j) {
+  for (let i = 0; i < size; ++i) {
+    for (let j = 0; j < 4; ++j) {
       alleBeilagenListe.push((jsonContent.Kalenderwoche[i].Montag[1].beilagen[j].name));
       alleBeilagenListe.push((jsonContent.Kalenderwoche[i].Dienstag[1].beilagen[j].name));
       alleBeilagenListe.push((jsonContent.Kalenderwoche[i].Mittwoch[1].beilagen[j].name));
@@ -150,27 +242,30 @@ function getAlleBeilagen(obj) {
   // Doppelte Elemente werden rausgestrichen.
   alleBeilagenListe = uniq(alleBeilagenListe);
 
-  var alleBeilagenObject = {
+  let alleBeilagenObject = {
     Beilagen: []
   };
-  for (var i = 0; i < alleBeilagenListe.length; ++i) {
+  for (let i = 0; i < alleBeilagenListe.length; ++i) {
     alleBeilagenObject.Beilagen.push(alleBeilagenListe[i]);
   }
   return alleBeilagenObject;
 }
 
+/* ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
 // Alle Server Anfragen:
 
 app.get(gerichte, (req, res) => {
   // Alle Gerichte zurückgeben.
-  const alleGerichte = getAlleGerichte(jsonContent);
+  let alleGerichte = getAlleGerichte(jsonContent);
   res.status(200).send(JSON.stringify(alleGerichte, null, 4));
 });
 
 app.get(gerichte_id, (req, res) => {
   // Konkrete Gerichte ausgeben.
-  const reqGericht = req.params.gericht;
-  var gerichtInfo = getGerichtInfo(reqGericht, jsonContent);
+  let reqGericht = req.params.gericht;
+  let gerichtInfo = getGerichtInfo(reqGericht, jsonContent);
   if (gerichtInfo != 0) {
     console.log("Gesendet: " + gerichtInfo);
     res.status(200).json(gerichtInfo);
@@ -179,14 +274,14 @@ app.get(gerichte_id, (req, res) => {
 
 app.get(beilagen, (req, res) => {
   // Alle Beilagen zurückgeben.
-  const alleBeilagen = getAlleBeilagen(jsonContent);
+  let alleBeilagen = getAlleBeilagen(jsonContent);
   res.status(200).send(JSON.stringify(alleBeilagen, null, 4));
 });
 
 app.get(beilagen_id, (req, res) => {
   // Konkrete Beilagen zurückgeben.
-  const reqBeilage = req.params.beilage;
-  var beilageInfo = getBeilagenInfo(reqBeilage, jsonContent);
+  let reqBeilage = req.params.beilage;
+  let beilageInfo = getBeilagenInfo(reqBeilage, jsonContent);
   if (beilageInfo != 0) {
     beilageInfo = JSON.stringify(beilageInfo, null, 4);
     res.status(200).send(beilageInfo);
@@ -194,76 +289,60 @@ app.get(beilagen_id, (req, res) => {
 });
 
 app.get(kalnderwochen, (req, res) => {
-  const kalenderwochen = getKalenderwochen(jsonContent);
+  let kalenderwochen = getKalenderwochen(jsonContent);
   res.status(200).send(kalenderwochen);
 });
 
 app.get(kalenderwochen_id_wochentage_id_gerichte, (req, res) => {
   // Alle Gerichte einer konkreten Kalenderwoche und eines Wochentags zurückgeben.
-
-  var reqKalenderwoche = req.params.kalenderwoche;
-  var reqWochentag = req.params.wochentag;
+  let reqKalenderwoche = req.params.kalenderwoche;
+  let reqWochentag = req.params.wochentag;
   reqKalenderwoche = reqKalenderwoche - 1;
+  let KalSize = jsonContent.Kalenderwoche.length;
 
-  if (reqWochentag === "Montag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Montag[0].gerichte), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Dienstag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[0].gerichte), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Mittwoch") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[0].gerichte), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Donnerstag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[0].gerichte), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Freitag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[0].gerichte), null, 4);
-    res.status(200).send(jsonObj);
-  } else res.status(404).send("Angefragter Tag ist nicht vorhanden!");
+  if (KalSize >= reqKalenderwoche + 1) {
+    let result = getSpeiseplanGerichte(reqKalenderwoche, reqWochentag);
+    if (result != 0) {
+      res.status(200).json(result);
+    } else res.status(404).send("Wochentag ist nicht verfügbar!");
+  } else res.status(404).send("Kalenderwoche nicht verfügbar!")
 });
 
 app.get(kalenderwochen_id_wochentage_id_beilagen, (req, res) => {
   // Alle Beilagen einer konkreten Kalenderwoche und eines Wochentags zurückgeben.
-  var reqKalenderwoche = req.params.kalenderwoche;
-  const reqWochentag = req.params.wochentag;
+  let reqKalenderwoche = req.params.kalenderwoche;
+  let reqWochentag = req.params.wochentag;
   reqKalenderwoche = reqKalenderwoche - 1;
-  if (reqWochentag === "Montag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Montag[1].beilagen), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Dienstag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Dienstag[1].beilagen), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Mittwoch") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Mittwoch[1].beilagen), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Donnerstag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Donnerstag[1].beilagen), null, 4);
-    res.status(200).send(jsonObj);
-  } else if (reqWochentag === "Freitag") {
-    var jsonObj = JSON.stringify((jsonContent.Kalenderwoche[reqKalenderwoche].Freitag[1].beilagen), null, 4);
-    res.send(jsonObj);
-  } else res.status(404).send("Angefragter Tag ist nicht vorhanden!");
+
+  let KalSize = jsonContent.Kalenderwoche.length;
+
+  if (KalSize >= reqKalenderwoche + 1) {
+    let result = getSpeiseplanBeilagen(reqKalenderwoche, reqWochentag);
+    if (result != 0) {
+      res.status(200).json(result);
+    } else res.status(404).send("Wochentag ist nicht verfügbar!");
+  } else res.status(404).send("Kalenderwoche nicht verfügbar!")
+
 });
 
+app.get(kalenderwochen_id_wochentage_id, (req, res) => {
+  let reqKalenderwoche = req.params.kalenderwoche;
+  let reqWochentag = req.params.wochentag;
+  reqKalenderwoche = reqKalenderwoche - 1;
+  let KalSize = jsonContent.Kalenderwoche.length;
+
+  if (KalSize >= reqKalenderwoche + 1) {
+    let result = getSpeiseplan(reqKalenderwoche, reqWochentag);
+    if (result != 0) {
+      res.status(200).json(result);
+    } else res.status(404).send("Wochentag ist nicht verfügbar!");
+  } else {
+    res.status(404).send("Kalenderwoche nicht verfügbar!")
+  }
+
+});
 
 
 // Get the Port which is set by environment or 3000 by default
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log("Listening on port " + port + "..."));
-
-
-
-// Funktion welche einem ein Object mit den Kalnderwochen zurückruft
-function getKalenderwochen(obj) {
-  var size2 = obj.Kalenderwoche.length;
-  var kalenderwochenObj = {
-    Kalenderwochen: []
-  };
-
-  for (var i = 1; i < size2 + 1; ++i) {
-    kalenderwochenObj.Kalenderwochen.push(i);
-  }
-  kalenderwochenObj = JSON.stringify(kalenderwochenObj, null, 4);
-  return kalenderwochenObj;
-}

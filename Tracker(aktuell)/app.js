@@ -27,35 +27,42 @@ app.use(function(err, req, res, next) {
 //ROUTING
 
 //Einbinden modul user-index / eintrag-index
-const user = require('./user');
+const User = require('./User');
 
 //binden der Routen an App
-app.use("/user", user);
+app.use("/User", User);
 
 
-// REQUESTS an den Microservice
+// REQUEST an den Microservice - Speiseplan
 
+function getSpeiseplan(url) {
 
-app.get('/gerichte', function(req, res) { // Anfrage alle Gerichte an Microservice
-  var url = 'xyxyxy/gerichte';
-
-  request(url, function(err, response, body) {
-    body = JSON.parse(body); //Falls Fehler evtl. -> res.end(body);
-    res.json(body);
-  })
-
-});
-
-
-app.get('/beilagen', function(req, res) { // Beilagen
-  var url = 'xyxyxy/gerichte';
-
-  request(url, function(err, response, body) {
-    body = JSON.parse(body);
-    res.json(body);
+  return new Promise(function(resolve, reject) {
+    request.get(url, function(err, response, body) {
+      body = JSON.parse(body);
+      var speiseplan = body;
+      if (speiseplan) {
+        resolve(speiseplan);
+      } else reject("Kein Speiseplan erhalten");
+    });
   });
-});
+}
 
+
+
+app.get('/MensaGm/Speiseplan/:kalenderwoche/:wochentag', function(req, res) {
+  var kw = req.params.kalenderwoche;
+  var wt = req.params.wochentag;
+  var url = 'https://microserviceserver.herokuapp.com/MensaGm/Speiseplan/' + kw + '/' + wt;
+
+  var speiseplan = getSpeiseplan(url);
+
+  speiseplan.then(function(result) {
+    res.status(200).json(result);
+    return;
+  });
+
+});
 
 
 

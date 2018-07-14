@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const request = require('request');
 
 const ressourceName = "users";
 
@@ -43,11 +44,16 @@ function getkcal(nahrungsmittel) {
 
 
 router.get('/', bodyParser.json(), function(req, res) {
-  res.send(listeUser);
+  res.status(200).send(listeUser);
 });
 
 
 router.post('/', bodyParser.json(), function(req, res) {
+
+  if (req.body.username == null || req.body.usergender == null || req.body.userage == null || req.body.userheight == null || req.body.userweight == null) {
+    res.status(500).send("Fehlende Angaben, um User erstellen zu können");
+    return;
+  }
 
   var neueId = userAnzahl;
   var user = {
@@ -71,11 +77,15 @@ router.post('/', bodyParser.json(), function(req, res) {
   listeUser[userAnzahl] = user;
   userAnzahl++;
 
-  res.status(200).send("User " + req.body.username + " hinzugefügt.");
+  res.status(201).send("User " + req.body.username + " hinzugefügt.");
 });
 
 router.put('/:userId', bodyParser.json(), function(req, res) {
 
+  if (req.body.username == null || req.body.usergender == null || req.body.userage == null || req.body.userheight == null || req.body.userweight == null) {
+    res.status(500).send("Fehlende Angaben, um User ändern zu können");
+    return;
+  }
 
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
@@ -100,11 +110,13 @@ router.put('/:userId', bodyParser.json(), function(req, res) {
 
 router.delete('/:userId', bodyParser.json(), function(req, res) {
 
+  var löschNotiz = {
+    id: "Dieser User wurde gelöscht"
+  }
+
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
-      listeUser = listeUser.filter(function(del) {
-        return del.id != req.params.userId;
-      });
+      listeUser[i] = löschNotiz;
       res.status(200).send("User wurde erfolgreich gelöscht!");
       return;
     }
@@ -126,8 +138,12 @@ router.get('/:userId', bodyParser.json(), function(req, res) {
 
 
 
-router.post('/:userId/eintraege', bodyParser.json(), function(req, res) {
+router.post('/:userId/Eintraege', bodyParser.json(), function(req, res) {
 
+  if (req.body.name == null || req.body.menge == null || req.body.kcal == null) {
+    res.status(500).send("Fehlende Angaben, um Eintrag erstellen zu können");
+    return;
+  }
 
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
@@ -153,7 +169,7 @@ router.post('/:userId/eintraege', bodyParser.json(), function(req, res) {
       listeUser[i].eintragId++;
 
 
-      res.status(200).send("Eintrag hinzugefügt.");
+      res.status(201).send("Eintrag hinzugefügt.");
       return;
     }
   }
@@ -162,7 +178,7 @@ router.post('/:userId/eintraege', bodyParser.json(), function(req, res) {
 });
 
 
-router.get('/:userId/eintraege', bodyParser.json(), function(req, res) {
+router.get('/:userId/Eintraege', bodyParser.json(), function(req, res) {
 
 
   for (let i = 0; i < listeUser.length; i++) {
@@ -177,7 +193,7 @@ router.get('/:userId/eintraege', bodyParser.json(), function(req, res) {
 
 
 
-router.get('/:userId/eintraege/:eintragId', bodyParser.json(), function(req, res) {
+router.get('/:userId/Eintraege/:eintragId', bodyParser.json(), function(req, res) {
 
 
   for (let i = 0; i < listeUser.length; i++) {
@@ -197,17 +213,18 @@ router.get('/:userId/eintraege/:eintragId', bodyParser.json(), function(req, res
 });
 
 
-router.delete('/:userId/eintraege/:eintragId', bodyParser.json(), function(req, res) {
+router.delete('/:userId/Eintraege/:eintragId', bodyParser.json(), function(req, res) {
 
+  var löschNotiz = {
+    id: "Dieser Eintrag wurde gelöscht"
+  }
 
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
       for (let j = 0; j < listeUser[i].eintraege.length; j++) {
         if (listeUser[i].eintraege[j].id == req.params.eintragId) {
           listeUser[i].userkcal = listeUser[i].userkcal + listeUser[i].eintraege[j].kcal;
-          listeUser[i].eintraege = listeUser[i].eintraege.filter(function(del) {
-            return del.id != listeUser[i].eintraege[j].id;
-          });
+          listeUser[i].eintraege[j] = löschNotiz;
           res.status(200).send("Eintrag wurde erfolgreich gelöscht!");
           return;
         }
@@ -248,7 +265,7 @@ router.get('/:userId/userkcal', bodyParser.json(), function(req, res) {
 function getNahrungsmittelEintrag(url) {
 
   return new Promise(function(resolve, reject) {
-    request(url, function(err, response, body) {
+    request.get(url, function(err, response, body) {
       body = JSON.parse(body);
       var eintrag = {
         name: body.name,
@@ -263,15 +280,20 @@ function getNahrungsmittelEintrag(url) {
 }
 
 
-router.get('/MensaGm/gerichte/:gericht/:userId', function(req, res) {
+router.get('/MensaGm/Gerichte/:gericht/:userId', function(req, res) {
   var nahrungsmittel = req.params.gericht;
-  var url = 'xyxyxy/gerichte/' + nahrungsmittel;
+  var url = 'https://microserviceserver.herokuapp.com/MensaGm/Gerichte/' + nahrungsmittel;
 
   var eintragGericht = getNahrungsmittelEintrag(url);
 
 
   eintragGericht.then(function(result) {
 
+    if (result.name == null || result.menge == null || result.kcal == null) {
+      res.status(500).send("Fehlende Angaben, um Eintrag erstellen zu können");
+      return;
+    }
+
     for (let i = 0; i < listeUser.length; i++) {
       if (listeUser[i].id == req.params.userId) {
 
@@ -285,26 +307,31 @@ router.get('/MensaGm/gerichte/:gericht/:userId', function(req, res) {
         listeUser[i].eintraege[listeUser[i].eintragId] = eintrag;
         listeUser[i].eintragId++;
 
-        res.status(200).send('Ausgewählte Beilage eingetragen');
-        return
+        res.status(201).send('Ausgewähltes Gericht eingetragen');
+        return;
       }
     }
     res.status(404).send('User nicht vorhanden');
   });
 
+
 });
 
 
 
-router.get('/MensaGm/beilagen/:beilage/:userId', function(req, res) {
+router.get('/MensaGm/Beilagen/:beilage/:userId', function(req, res) {
   var nahrungsmittel = req.params.beilage;
-  var url = 'xyxyxy/gerichte/' + nahrungsmittel;
+  var url = 'https://microserviceserver.herokuapp.com/MensaGm/Beilagen/' + nahrungsmittel;
 
   var eintragBeilage = getNahrungsmittelEintrag(url);
 
 
   eintragBeilage.then(function(result) {
 
+    if (result.name == null || result.menge == null || result.kcal == null) {
+      res.status(500).send("Fehlende Angaben, um Eintrag erstellen zu können");
+      return;
+    }
 
     for (let i = 0; i < listeUser.length; i++) {
       if (listeUser[i].id == req.params.userId) {
@@ -319,31 +346,14 @@ router.get('/MensaGm/beilagen/:beilage/:userId', function(req, res) {
         listeUser[i].eintraege[listeUser[i].eintragId] = eintrag;
         listeUser[i].eintragId++;
 
-        res.status(200).send('Ausgewählte Beilage eingetragen');
-        return
+        res.status(201).send('Ausgewählte Beilage eingetragen');
+        return;
       }
     }
     res.status(404).send('User nicht vorhanden');
   });
 
 });
-
-
-
-
-
-
-
-
-
-// TODO:
-
-//   -  Microserviceanbindung testen! 
-
-//   - FOR Schleifen Fehlerhaft, nach Löschen von Objekten!
-
-// (CHECK) -> Deploy, anpassen URL´s app.js
-
 
 
 

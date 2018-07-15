@@ -77,7 +77,8 @@ router.post('/', bodyParser.json(), function(req, res) {
   listeUser[userAnzahl] = user;
   userAnzahl++;
 
-  res.status(201).send("User " + req.body.username + " hinzugefügt.");
+  var ergebnis = JSON.stringify(user);
+  res.status(201).send("User " + req.body.username + " hinzugefügt: " + ergebnis);
 });
 
 router.put('/:userId', bodyParser.json(), function(req, res) {
@@ -168,8 +169,8 @@ router.post('/:userId/Eintraege', bodyParser.json(), function(req, res) {
       listeUser[i].eintraege[listeUser[i].eintragId] = eintrag;
       listeUser[i].eintragId++;
 
-
-      res.status(201).send("Eintrag hinzugefügt.");
+      var ergebnis = JSON.stringify(eintrag);
+      res.status(201).send("Eintrag hinzugefügt: " + ergebnis);
       return;
     }
   }
@@ -307,7 +308,8 @@ router.get('/MensaGm/Gerichte/:gericht/:userId', function(req, res) {
         listeUser[i].eintraege[listeUser[i].eintragId] = eintrag;
         listeUser[i].eintragId++;
 
-        res.status(201).send('Ausgewähltes Gericht eingetragen');
+        var ergebnis = JSON.stringify(eintrag);
+        res.status(201).send('Ausgewähltes Gericht eingetragen: ' + ergebnis);
         return;
       }
     }
@@ -346,7 +348,8 @@ router.get('/MensaGm/Beilagen/:beilage/:userId', function(req, res) {
         listeUser[i].eintraege[listeUser[i].eintragId] = eintrag;
         listeUser[i].eintragId++;
 
-        res.status(201).send('Ausgewählte Beilage eingetragen');
+        var ergebnis = JSON.stringify(eintrag);
+        res.status(201).send('Ausgewählte Beilage eingetragen: ' + ergebnis);
         return;
       }
     }

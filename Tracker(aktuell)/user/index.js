@@ -281,7 +281,7 @@ function getNahrungsmittelEintrag(url) {
 }
 
 
-router.get('/MensaGm/Gerichte/:gericht/:userId', function(req, res) {
+router.post('/MensaGm/Gerichte/:gericht/:userId', function(req, res) {
   var nahrungsmittel = req.params.gericht;
   var url = 'https://microserviceserver.herokuapp.com/MensaGm/Gerichte/' + nahrungsmittel;
 
@@ -321,7 +321,7 @@ router.get('/MensaGm/Gerichte/:gericht/:userId', function(req, res) {
 
 
 
-router.get('/MensaGm/Beilagen/:beilage/:userId', function(req, res) {
+router.post('/MensaGm/Beilagen/:beilage/:userId', function(req, res) {
   var nahrungsmittel = req.params.beilage;
   var url = 'https://microserviceserver.herokuapp.com/MensaGm/Beilagen/' + nahrungsmittel;
 

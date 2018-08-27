@@ -7,7 +7,7 @@ const request = require('request');
 const bodyParser = require('body-parser');
 
 const settings = {
-  port: 3000
+  port: 3001
 };
 
 
@@ -26,7 +26,7 @@ app.use(function(err, req, res, next) {
 
 //ROUTING
 
-//Einbinden modul user-index / eintrag-index
+//Einbinden modul user-index
 const User = require('./User');
 
 //binden der Routen an App

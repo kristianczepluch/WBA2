@@ -1,4 +1,6 @@
-/* Dienstnutzer, welcher als GUI fungiert und ein basic PubSub System enthält. */
+/* Dienstnutzer, welcher ein PubSub System implementiert, welches
+   Benutzern ermöglicht Tagesziele zu subscriben. Diese erhält der Benutzer
+   dann jeden Tag */
 
 const request = require('request');
 const http = require('http');
@@ -13,7 +15,29 @@ menu.addDelimiter('*', 40, 'Health Tracker')
   .addItem(
     '\tBenutzer erstellen',
     function(username, usergender, userage, userheigt, userweight) {
-      // Code here
+
+      var url = dHost + '/User';
+
+      var userData = {
+        "username": username,
+        "usergender": usergender,
+        "userage": userage,
+        "userheight": userheigt,
+        "userweight": userweight
+      }
+
+      var options = {
+        uri: url,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        json: userData
+      }
+
+      request(options, function(err, res, body) {
+        console.log(body);
+      });
 
     }, null, [{
       'name': 'username',
@@ -33,6 +57,7 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     }]).addItem(
     '\tBenutzer abfragen',
     function(benutzerId) {
+
       var url = dHost + '/User/' + benutzerId;
       request.get(url, function(err, res, body) {
         body = JSON.parse(body);
@@ -46,7 +71,28 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     '\tBenutzer ändern',
     function(userId, username, usergender, userage, userheigt, userweight) {
 
-      // Code here
+      var url = dHost + '/User/' + userId;
+
+      var userData = {
+        "username": username,
+        "usergender": usergender,
+        "userage": userage,
+        "userheight": userheigt,
+        "userweight": userweight
+      }
+
+      var options = {
+        uri: url,
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        json: userData
+      }
+
+      request(options, function(err, res, body) {
+        console.log(body);
+      });
 
     }, null, [{
       'name': 'userId',
@@ -70,7 +116,16 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     '\tBenutzer löschen',
     function(userId) {
 
-      // Code here
+      var url = dHost + '/User/' + userId;
+
+      var options = {
+        uri: url,
+        method: 'DELETE'
+      }
+
+      request(options, function(err, res, body) {
+        console.log(body);
+      });
 
     }, null, [{
       'name': 'benutzerId',
@@ -79,7 +134,26 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     '\tEintrag erstellen',
     function(userId, name, menge, kcal) {
 
-      // Code here
+      var url = dHost + '/User/' + userId + '/Eintraege';
+
+      var data = {
+        "name": name,
+        "menge": menge,
+        "kcal": kcal
+      }
+
+      var options = {
+        uri: url,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        json: data
+      }
+
+      request(options, function(err, res, body) {
+        console.log(body);
+      });
 
     }, null, [{
       'name': 'userId',
@@ -96,7 +170,13 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     }]).addItem(
     '\tEinträg abfragen',
     function(benutzerId, eintragId) {
-      // Code here
+
+      var url = dHost + '/User/' + benutzerId + '/Eintraege/' + eintragId;
+      request.get(url, function(err, res, body) {
+        body = JSON.parse(body);
+        console.log(body);
+      });
+
     }, null, [{
       'name': 'benutzerId',
       'type': 'numeric'
@@ -107,7 +187,16 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     '\tEintrag löschen',
     function(userId, eintragId) {
 
-      // Code here
+      var url = dHost + '/User/' + userId + '/Eintraege/' + eintragId;
+
+      var options = {
+        uri: url,
+        method: 'DELETE'
+      }
+
+      request(options, function(err, res, body) {
+        console.log(body);
+      });
 
     }, null, [{
       'name': 'benutzerId',
@@ -118,7 +207,12 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     }]).addItem(
     '\tÜbrige Kcal abfragen',
     function(benutzerId) {
-      // Code here
+
+      var url = dHost + '/User/' + benutzerId + '/userkcal';
+      request.get(url, function(err, res, body) {
+        body = JSON.parse(body);
+        console.log(body);
+      });
 
     }, null, [{
       'name': 'benutzerId',
@@ -163,7 +257,18 @@ menu.addDelimiter('*', 40, 'Health Tracker')
     }]).addItem(
     '\tMensabeilage eintragen',
     function(beilage, userId) {
-      // Code here
+
+      var url = dHost + '/User/MensaGm/Beilagen/' + beilage + '/' + userId;
+
+      var options = {
+        uri: url,
+        method: 'POST'
+      }
+
+
+      request(options, function(err, res, body) {
+        console.log(body);
+      });
 
     }, null, [{
       'name': 'beilage',

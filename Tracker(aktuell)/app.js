@@ -7,7 +7,7 @@ const request = require('request');
 const bodyParser = require('body-parser');
 
 const settings = {
-  port: 3001
+  port: process.env.PORT || 3001
 };
 
 

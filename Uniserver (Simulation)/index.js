@@ -219,12 +219,23 @@ function getAlleGerichte(obj) {
   for (let i = 0; i < alleGerichteListe.length; ++i) {
     alleGerichteObject.Gerichte.push(alleGerichteListe[i]);
   }
-  return alleGerichteObject;
 
+  let basicURL = "http://localhost:3000/api/Gerichte/";
+  let finalObj = { AlleGerichte: [] };
+
+  for(let i=0; i<alleGerichteObject.Gerichte.length; i++){
+  let newObj = {
+    name: alleGerichteObject.Gerichte[i],
+    Informations: basicURL + (alleGerichteObject.Gerichte[i].replace(/ /g, "%20"))
+  }
+  finalObj.AlleGerichte.push(newObj);
+  }
+
+  return finalObj;
 
 }
 
-// Funktion, welche das gesamte JSON Dokument durchläuft und alle vorhandenen B herausschreibt.
+// Funktion, welche das gesamte JSON Dokument durchläuft und alle vorhandenen Beilagen herausschreibt.
 function getAlleBeilagen(obj) {
   let alleBeilagenListe = [];
   let size = Object.size(jsonContent);
@@ -248,7 +259,20 @@ function getAlleBeilagen(obj) {
   for (let i = 0; i < alleBeilagenListe.length; ++i) {
     alleBeilagenObject.Beilagen.push(alleBeilagenListe[i]);
   }
-  return alleBeilagenObject;
+
+  let basicURL = "http://localhost:3000/api/Beilagen/";
+  let finalObj = { AlleBeilagen: [] };
+
+  for(let i=0; i<alleBeilagenObject.Beilagen.length; i++){
+  let newObj = {
+    name: alleBeilagenObject.Beilagen[i],
+    Informations: basicURL + (alleBeilagenObject.Beilagen[i].replace(/ /g, "%20"))
+  }
+  finalObj.AlleBeilagen.push(newObj);
+  }
+
+
+  return finalObj;
 }
 
 /* ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -268,6 +292,7 @@ app.get(gerichte_id, (req, res) => {
   let gerichtInfo = getGerichtInfo(reqGericht, jsonContent);
   if (gerichtInfo != 0) {
     console.log("Gesendet: " + gerichtInfo);
+    gerichtInfo.alleGerichte = "http://localhost:3000/api/Gerichte"
     res.status(200).json(gerichtInfo);
   } else res.status(404).send("Gericht nicht gefunden!");
 });
@@ -283,6 +308,7 @@ app.get(beilagen_id, (req, res) => {
   let reqBeilage = req.params.beilage;
   let beilageInfo = getBeilagenInfo(reqBeilage, jsonContent);
   if (beilageInfo != 0) {
+    beilageInfo.alleBeilagen = "http://localhost:3000/api/Beilagen";
     beilageInfo = JSON.stringify(beilageInfo, null, 4);
     res.status(200).send(beilageInfo);
   } else res.status(404).send("Beilage nicht gefunden!");

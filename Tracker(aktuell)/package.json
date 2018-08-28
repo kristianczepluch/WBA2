@@ -4,6 +4,7 @@
   "description": "Anlegen von Benutzern und Eintraegen",
   "main": "app.js",
   "dependencies": {
+    "all": "0.0.0",
     "express": "^4.16.3",
     "request": "^2.87.0"
   },

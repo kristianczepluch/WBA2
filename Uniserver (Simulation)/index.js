@@ -11,6 +11,7 @@ auf dem Microservice, welcher die Kilokalorien der Unigerichte berechnet! Dieser
 const express = require('express');
 var fs = require("fs");
 const app = express();
+const sortBy = require('sort-array');
 app.use(express.json());
 
 // Das Jason-File mit unseren Informationen zu den Gerichten wird ausgelesen und vorgespeichert.
@@ -28,6 +29,9 @@ const kalenderwochen_id_wochentage = '/api/kalenderwochen/:kalenderwoche/wochent
 const kalenderwochen_id_wochentage_id_gerichte = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag/gerichte';
 const kalenderwochen_id_wochentage_id_beilagen = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag/beilagen';
 const kalenderwochen_id_wochentage_id = '/api/kalenderwochen/:kalenderwoche/wochentage/:wochentag';
+
+
+
 
 // Funktion welche einem ein Object mit den Kalnderwochen zurückruft
 function getKalenderwochen(obj) {
@@ -220,7 +224,7 @@ function getAlleGerichte(obj) {
     alleGerichteObject.Gerichte.push(alleGerichteListe[i]);
   }
 
-  let basicURL = "http://localhost:3000/api/Gerichte/";
+  let basicURL = "http://mensauniserver.herokuapp.com//api/Gerichte/";
   let finalObj = { AlleGerichte: [] };
 
   for(let i=0; i<alleGerichteObject.Gerichte.length; i++){
@@ -260,7 +264,7 @@ function getAlleBeilagen(obj) {
     alleBeilagenObject.Beilagen.push(alleBeilagenListe[i]);
   }
 
-  let basicURL = "http://localhost:3000/api/Beilagen/";
+  let basicURL = "http://mensauniserver.herokuapp.com//api/Beilagen/";
   let finalObj = { AlleBeilagen: [] };
 
   for(let i=0; i<alleBeilagenObject.Beilagen.length; i++){
@@ -283,7 +287,10 @@ function getAlleBeilagen(obj) {
 app.get(gerichte, (req, res) => {
   // Alle Gerichte zurückgeben.
   let alleGerichte = getAlleGerichte(jsonContent);
-  res.status(200).send(JSON.stringify(alleGerichte, null, 4));
+  console.log(alleGerichte);
+  if(req.query.sortBy == "name"){
+    return res.status(200).send(JSON.stringify(sortBy(alleGerichte.AlleGerichte.slice(0), 'name'), null, 4));
+  } else return res.status(200).send(JSON.stringify(alleGerichte, null, 4));
 });
 
 app.get(gerichte_id, (req, res) => {
@@ -292,7 +299,7 @@ app.get(gerichte_id, (req, res) => {
   let gerichtInfo = getGerichtInfo(reqGericht, jsonContent);
   if (gerichtInfo != 0) {
     console.log("Gesendet: " + gerichtInfo);
-    gerichtInfo.alleGerichte = "http://localhost:3000/api/Gerichte"
+    gerichtInfo.alleGerichte = "http://mensauniserver.herokuapp.com/api/Gerichte"
     res.status(200).json(gerichtInfo);
   } else res.status(404).send("Gericht nicht gefunden!");
 });
@@ -300,7 +307,10 @@ app.get(gerichte_id, (req, res) => {
 app.get(beilagen, (req, res) => {
   // Alle Beilagen zurückgeben.
   let alleBeilagen = getAlleBeilagen(jsonContent);
-  res.status(200).send(JSON.stringify(alleBeilagen, null, 4));
+  console.log(typeof(alleBeilagen));
+  if(req.query.sortBy == "name"){
+    return res.status(200).send(JSON.stringify(sortBy(alleBeilagen.AlleBeilagen.slice(0), 'name'), null, 4));
+  } else  return res.status(200).send(JSON.stringify(alleBeilagen, null, 4));
 });
 
 app.get(beilagen_id, (req, res) => {
@@ -308,8 +318,10 @@ app.get(beilagen_id, (req, res) => {
   let reqBeilage = req.params.beilage;
   let beilageInfo = getBeilagenInfo(reqBeilage, jsonContent);
   if (beilageInfo != 0) {
-    beilageInfo.alleBeilagen = "http://localhost:3000/api/Beilagen";
+    beilageInfo.alleBeilagen = "http://mensauniserver.herokuapp.com/api/Beilagen";
     beilageInfo = JSON.stringify(beilageInfo, null, 4);
+
+    console.log(beilageInfo);
     res.status(200).send(beilageInfo);
   } else res.status(404).send("Beilage nicht gefunden!");
 });

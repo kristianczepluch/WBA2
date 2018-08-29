@@ -5,6 +5,29 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const request = require('request');
+const sortBy = require('sort-array');
+var schedule = require('node-schedule');
+
+
+// Logic which resets all of the entries of the user every 24 hours.
+var j = schedule.scheduleJob('59 23 * * *', function(){
+  for(let i=0; i<listeUser.length; i++){
+    if(listeUser[i].id != "Dieser User wurde gelöscht"){
+    listeUser[i].eintraege = [];
+    if (listeUser[i].usergender == "Female") {
+      listeUser[i].userkcal = 655.1 + (9.6 * listeUser[i].userweight) + (1.8 * listeUser[i].userheight) - (4.7 *listeUser[i].userage);
+    } else {
+      listeUser[i].userkcal = 66.47 + (13.7 * listeUser[i].userweight) + (5.0 * user.userheight) - (6.8 * listeUser[i].userage);
+    }
+    listeUser[i].eintragId=0;
+  } else { // do nothing to deleted users}
+  }
+}
+
+  console.log('Einträge wurden gelöscht!');
+});
+
+
 
 const ressourceName = "users";
 
@@ -44,14 +67,14 @@ function getkcal(nahrungsmittel) {
 
 
 router.get('/', bodyParser.json(), function(req, res) {
-  res.status(200).json(listeUser);
+  res.status(200).send(listeUser);
 });
 
 
 router.post('/', bodyParser.json(), function(req, res) {
 
   if (req.body.username == null || req.body.usergender == null || req.body.userage == null || req.body.userheight == null || req.body.userweight == null) {
-    res.status(500).json("Fehlende Angaben, um User erstellen zu können");
+    res.status(500).send("Fehlende Angaben, um User erstellen zu können");
     return;
   }
 
@@ -78,13 +101,13 @@ router.post('/', bodyParser.json(), function(req, res) {
   userAnzahl++;
 
   var ergebnis = JSON.stringify(user);
-  res.status(201).json("User " + req.body.username + " hinzugefügt: " + ergebnis);
+  res.status(201).send("User " + req.body.username + " hinzugefügt: " + ergebnis);
 });
 
 router.put('/:userId', bodyParser.json(), function(req, res) {
 
   if (req.body.username == null || req.body.usergender == null || req.body.userage == null || req.body.userheight == null || req.body.userweight == null) {
-    res.status(500).json("Fehlende Angaben, um User ändern zu können");
+    res.status(500).send("Fehlende Angaben, um User ändern zu können");
     return;
   }
 
@@ -100,11 +123,11 @@ router.put('/:userId', bodyParser.json(), function(req, res) {
       } else {
         listeUser[i].userkcal = 66.47 + (13.7 * listeUser[i].userweight) + (5.0 * listeUser[i].userheight) - (6.8 * listeUser[i].userage);
       }
-      res.status(200).json('Die Daten des Users wurden angepasst');
+      res.status(200).type('text').send('Die Daten des Users wurden angepasst');
       return;
     }
   }
-  res.status(404).json('Dieser User ist nicht vorhanden');
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 
 
 });
@@ -118,11 +141,11 @@ router.delete('/:userId', bodyParser.json(), function(req, res) {
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
       listeUser[i] = löschNotiz;
-      res.status(200).json("User wurde erfolgreich gelöscht!");
+      res.status(200).send("User wurde erfolgreich gelöscht!");
       return;
     }
   }
-  res.status(404).json('Dieser User ist nicht vorhanden');
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 
 });
 
@@ -130,11 +153,11 @@ router.get('/:userId', bodyParser.json(), function(req, res) {
 
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
-      res.status(200).json(listeUser[i]);
+      res.status(200).send(listeUser[i]);
       return;
     }
   }
-  res.status(404).json('Dieser User ist nicht vorhanden');
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 });
 
 
@@ -142,7 +165,7 @@ router.get('/:userId', bodyParser.json(), function(req, res) {
 router.post('/:userId/Eintraege', bodyParser.json(), function(req, res) {
 
   if (req.body.name == null || req.body.menge == null || req.body.kcal == null) {
-    res.status(500).json("Fehlende Angaben, um Eintrag erstellen zu können");
+    res.status(500).send("Fehlende Angaben, um Eintrag erstellen zu können");
     return;
   }
 
@@ -163,32 +186,50 @@ router.post('/:userId/Eintraege', bodyParser.json(), function(req, res) {
         var kcalGericht = getkcal(req.body.name);
         kcalGericht.then(function(result) {
           eintrag.kcal = result * mengeMultiplier;
-          listeUser[i].userkcal = listeUser[i].userkcal - result;
+          listeUser[i].userkcal = listeUser[i].userkcal - eintrag.kcal;
         });
       }
       listeUser[i].eintraege[listeUser[i].eintragId] = eintrag;
       listeUser[i].eintragId++;
 
+
       var ergebnis = JSON.stringify(eintrag);
-      res.status(201).json("Eintrag hinzugefügt: " + ergebnis);
+      res.status(201).send("Eintrag hinzugefügt: " + ergebnis);
       return;
     }
   }
-  res.status(404).json('Dieser User ist nicht vorhanden')
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden')
 
 });
 
 
 router.get('/:userId/Eintraege', bodyParser.json(), function(req, res) {
 
-
+  console.log(typeof(listeUser[0].eintraege));
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
-      res.status(200).json(listeUser[i].eintraege);
-      return;
+      if(req.query.sortBy == "name"){
+        let newArray = listeUser[i].eintraege;
+        let Nameresult = sortBy(newArray.slice(0), 'name');
+          Nameresult.push({"Zum Benutzer" : "http://localhost:3000/user/" + req.params.userId});
+          Nameresult.push({"Zu den Kcal" : "http://localhost:3000/user/" + req.params.userId +"/userkcal"});
+          console.log(Nameresult);
+          return res.status(200).send(Nameresult);
+      }
+      if(req.query.sortBy == "kcal"){
+        let newArray2 = listeUser[i].eintraege;
+        let Kcalresult = sortBy(newArray2.slice(0), 'kcal');
+        Kcalresult.push({"Zum Benutzer" : "http://localhost:3000/user/" + req.params.userId});
+        Kcalresult.push({"Zu den Kcal" : "http://localhost:3000/user/" + req.params.userId +"/userkcal"});
+        return res.status(200).send(Kcalresult);
+      } else {
+        let newArray3 = listeUser[i].eintraege.slice(0);
+        newArray3.push({"Zum Benutzer" : "http://localhost:3000/user/" + req.params.userId});
+        newArray3.push({"Zu den Kcal" : "http://localhost:3000/user/" + req.params.userId +"/userkcal"});
+        return res.status(200).send(newArray3);
+      }
     }
-  }
-  res.status(404).json('Dieser User ist nicht vorhanden');
+  } return res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 });
 
 
@@ -201,15 +242,20 @@ router.get('/:userId/Eintraege/:eintragId', bodyParser.json(), function(req, res
     if (listeUser[i].id == req.params.userId) {
       for (let j = 0; j < listeUser[i].eintraege.length; j++) {
         if (listeUser[i].eintraege[j].id == req.params.eintragId) {
-          res.status(200).json(listeUser[i].eintraege[j])
+          let finalResponse = [];
+          let copy = listeUser[i].eintraege.slice(0);
+          finalResponse.push(copy[j]);
+          finalResponse.push({"Zu allen Eintraegen" : "http://localhost:3000/user/" + req.params.userId +"/Eintraege"});
+
+          res.status(200).send(finalResponse)
           return;
         }
       }
-      res.status(404).json("Eintrag nicht vorhanden");
+      res.status(404).send("Eintrag nicht vorhanden");
       return;
     }
   }
-  res.status(404).json('Dieser User ist nicht vorhanden');
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 
 });
 
@@ -226,15 +272,15 @@ router.delete('/:userId/Eintraege/:eintragId', bodyParser.json(), function(req, 
         if (listeUser[i].eintraege[j].id == req.params.eintragId) {
           listeUser[i].userkcal = listeUser[i].userkcal + listeUser[i].eintraege[j].kcal;
           listeUser[i].eintraege[j] = löschNotiz;
-          res.status(200).json("Eintrag wurde erfolgreich gelöscht!");
+          res.status(200).send("Eintrag wurde erfolgreich gelöscht!");
           return;
         }
       }
-      res.status(404).json("Eintrag nicht vorhanden");
+      res.status(404).send("Eintrag nicht vorhanden");
       return
     }
   }
-  res.status(404).json('Dieser User ist nicht vorhanden');
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 
 });
 
@@ -245,15 +291,20 @@ router.get('/:userId/userkcal', bodyParser.json(), function(req, res) {
   for (let i = 0; i < listeUser.length; i++) {
     if (listeUser[i].id == req.params.userId) {
       if (listeUser[i].userkcal <= 0) {
-        res.status(200).json('Tagesmaximum überschritten!');
+        res.status(200).send("Tagesmaximum überschritten!");
         return;
       } else {
-        res.status(200).json('Verfügbare Kcal: ' + listeUser[i].userkcal);
+        let finalObject = [];
+        let kcalObj = {"Verfügbare Kcal für den Tag" : listeUser[i].userkcal}
+        let linkObj = {"Zu allen Eintraegen" : "http://localhost:3000/user/" + req.params.userId +"/Eintraege"}
+        finalObject.push(kcalObj);
+        finalObject.push(linkObj);
+        res.status(200).send(finalObject);
         return;
       }
     }
   }
-  res.status(404).json('Dieser User ist nicht vorhanden');
+  res.status(404).type('text').send('Dieser User ist nicht vorhanden');
 });
 
 
@@ -291,7 +342,7 @@ router.post('/MensaGm/Gerichte/:gericht/:userId', function(req, res) {
   eintragGericht.then(function(result) {
 
     if (result.name == null || result.menge == null || result.kcal == null) {
-      res.status(500).json("Fehlende Angaben, um Eintrag erstellen zu können");
+      res.status(500).send("Fehlende Angaben, um Eintrag erstellen zu können");
       return;
     }
 
@@ -309,11 +360,11 @@ router.post('/MensaGm/Gerichte/:gericht/:userId', function(req, res) {
         listeUser[i].eintragId++;
 
         var ergebnis = JSON.stringify(eintrag);
-        res.status(201).json('Ausgewähltes Gericht eingetragen: ' + ergebnis);
+        res.status(201).send('Ausgewähltes Gericht eingetragen: ' + ergebnis);
         return;
       }
     }
-    res.status(404).json('User nicht vorhanden');
+    res.status(404).send('User nicht vorhanden');
   });
 
 
@@ -331,7 +382,7 @@ router.post('/MensaGm/Beilagen/:beilage/:userId', function(req, res) {
   eintragBeilage.then(function(result) {
 
     if (result.name == null || result.menge == null || result.kcal == null) {
-      res.status(500).json("Fehlende Angaben, um Eintrag erstellen zu können");
+      res.status(500).send("Fehlende Angaben, um Eintrag erstellen zu können");
       return;
     }
 
@@ -349,11 +400,11 @@ router.post('/MensaGm/Beilagen/:beilage/:userId', function(req, res) {
         listeUser[i].eintragId++;
 
         var ergebnis = JSON.stringify(eintrag);
-        res.status(201).json('Ausgewählte Beilage eingetragen: ' + ergebnis);
+        res.status(201).send('Ausgewählte Beilage eingetragen: ' + ergebnis);
         return;
       }
     }
-    res.status(404).json('User nicht vorhanden');
+    res.status(404).send('User nicht vorhanden');
   });
 
 });
